@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: agendamento_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: agendamento_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - agendamento_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: agendamento_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: agendamento_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: troque-esta-chave-por-uma-bem-maior-e-secreta-em-producao-0123456789
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: agendamento_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+volumes:
+  agendamento_db_data:

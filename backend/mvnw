@@ -1,0 +1,27 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Maven Wrapper startup script (padrão oficial do projeto maven-wrapper)
+# Baixa e usa uma versão fixa do Maven definida em .mvn/wrapper/maven-wrapper.properties,
+# assim qualquer pessoa que clonar o repositório builda com a mesma versão do Maven,
+# sem precisar instalar nada manualmente.
+# ----------------------------------------------------------------------------
+
+set -e
+
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+WRAPPER_DIR="$BASE_DIR/.mvn/wrapper"
+WRAPPER_PROPERTIES="$WRAPPER_DIR/maven-wrapper.properties"
+WRAPPER_JAR="$WRAPPER_DIR/maven-wrapper.jar"
+
+if [ ! -f "$WRAPPER_JAR" ]; then
+  WRAPPER_URL=$(grep '^wrapperUrl' "$WRAPPER_PROPERTIES" | cut -d'=' -f2-)
+  echo "Baixando Maven Wrapper de: $WRAPPER_URL"
+  curl -fsSL -o "$WRAPPER_JAR" "$WRAPPER_URL"
+fi
+
+JAVA_EXE="${JAVA_HOME:+$JAVA_HOME/bin/}java"
+
+exec "$JAVA_EXE" \
+  -classpath "$WRAPPER_JAR" \
+  "-Dmaven.multiModuleProjectDirectory=$BASE_DIR" \
+  org.apache.maven.wrapper.MavenWrapperMain "$@"
