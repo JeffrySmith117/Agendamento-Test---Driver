@@ -1,7 +1,9 @@
 import axios from "axios";
 
+// em produção (Vercel), VITE_API_URL aponta para o backend no Render;
+// em desenvolvimento local, cai no localhost por padrão
 export const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080/api",
 });
 
 // injeta o token JWT salvo no login em toda requisição autenticada
