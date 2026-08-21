@@ -1,7 +1,15 @@
 # Sistema de Agendamento — Test-Drive & Revisão
 
+[![CI](https://github.com/JeffrySmith117/Agendamento-Test---Driver/actions/workflows/ci.yml/badge.svg)](https://github.com/JeffrySmith117/Agendamento-Test---Driver/actions/workflows/ci.yml)
+
 Aplicação full stack para uma concessionária: o cliente agenda test-drives ou
 revisões, e a equipe interna acompanha a agenda do dia em um painel administrativo.
+Catálogo com a linha real de carros e motos Honda.
+
+**🔗 Demo ao vivo:** https://agendamento-test-driver.vercel.app
+> A API roda em um plano gratuito (Render) e "dorme" após inatividade — a
+> primeira requisição do dia pode levar até ~1 minuto para responder. As
+> seguintes são instantâneas.
 
 Projetado como peça de portfólio para vagas de **Desenvolvedor Full Stack Júnior**,
 cobrindo front-end, back-end, banco de dados, autenticação e um diferencial de IA.
@@ -12,11 +20,17 @@ cobrindo front-end, back-end, banco de dados, autenticação e um diferencial de
 - Java 17 + Spring Boot 3 (Web, Data JPA, Security, Validation)
 - PostgreSQL + Flyway (versionamento de schema)
 - Autenticação stateless com JWT (jjwt)
+- JUnit 5 + Mockito + AssertJ (testes unitários das regras de negócio)
 
 **Front-end**
 - React 18 + TypeScript + Vite
 - Tailwind CSS
 - React Router + Axios (com interceptor de token)
+
+**DevOps**
+- Docker + Docker Compose (ambiente local com um comando)
+- GitHub Actions (CI: build e testes a cada push)
+- Deploy: back-end no Render, front-end na Vercel
 
 ## Funcionalidades
 
@@ -75,10 +89,17 @@ npm run dev
 ```
 A aplicação sobe em `http://localhost:5173`.
 
+## Testes
+
+```bash
+cd backend
+./mvnw test
+```
+Cobre as regras de negócio de `AgendamentoService`: horário comercial, bloqueio
+de domingos, anti-overbooking e a lógica de sugestão de horário alternativo.
+
 ## Próximos passos (evolução sugerida)
 
-- Testes automatizados (JUnit no back-end, Testing Library no front) —
-  reaproveitando sua experiência com QA
-- Deploy: back-end em Railway/Render, front-end na Vercel
 - Cancelamento de agendamento pelo cliente
 - Notificação por e-mail/WhatsApp ao confirmar o agendamento
+- Testes de integração do front-end (Testing Library)
