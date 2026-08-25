@@ -7,6 +7,10 @@ import com.jeffry.agendamento.repository.AgendamentoRepository;
 import com.jeffry.agendamento.repository.UsuarioRepository;
 import com.jeffry.agendamento.repository.VeiculoRepository;
 import com.jeffry.agendamento.service.AgendamentoService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +21,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,6 +50,20 @@ class AgendamentoControllerSecurityTest {
 
     @MockBean
     private AgendamentoRepository agendamentoRepository;
+
+    @BeforeEach
+    void configurarFiltroFake() throws Exception {
+        // o mock do filtro JWT precisa deixar a requisicao seguir adiante
+        // na cadeia de filtros; sem isso, o Mockito nao chama chain.doFilter()
+        // e a requisicao nunca chega nas checagens reais de autorizacao
+        doAnswer(invocation -> {
+            ServletRequest request = invocation.getArgument(0);
+            ServletResponse response = invocation.getArgument(1);
+            FilterChain chain = invocation.getArgument(2);
+            chain.doFilter(request, response);
+            return null;
+        }).when(jwtAuthFilter).doFilter(any(), any(), any());
+    }
 
     @Nested
     @DisplayName("GET /api/agendamentos (listagem por periodo - dados de todos os clientes)")
