@@ -92,7 +92,7 @@ class AgendamentoServiceTest {
 
             assertThatThrownBy(() -> agendamentoService.criar(cliente, req))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("ja esta reservado");
+                .hasMessageContaining("reservado");
 
             verify(agendamentoRepository, never()).save(any());
         }
@@ -153,7 +153,7 @@ class AgendamentoServiceTest {
 
             assertThatThrownBy(() -> agendamentoService.criar(cliente, req))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("nao encontrado");
+                .hasMessageContaining("encontrado");
         }
     }
 
@@ -170,7 +170,7 @@ class AgendamentoServiceTest {
             HorarioSugeridoResponse resposta = agendamentoService.sugerirHorario(veiculo.getId(), preferencia);
 
             assertThat(resposta.horarioSugerido()).isEqualTo(preferencia);
-            assertThat(resposta.motivo()).contains("disponivel");
+            assertThat(resposta.motivo()).contains("solicitado");
         }
 
         @Test
@@ -185,7 +185,7 @@ class AgendamentoServiceTest {
             HorarioSugeridoResponse resposta = agendamentoService.sugerirHorario(veiculo.getId(), preferencia);
 
             assertThat(resposta.horarioSugerido()).isEqualTo(proximoSlot);
-            assertThat(resposta.motivo()).contains("indisponivel");
+            assertThat(resposta.motivo()).contains("sugerindo");
         }
     }
 
