@@ -1,4 +1,5 @@
 @ECHO OFF
+setlocal enabledelayedexpansion
 REM ----------------------------------------------------------------------------
 REM Maven Wrapper startup script (Windows)
 REM Baixa e usa a versao do Maven fixada em .mvn\wrapper\maven-wrapper.properties
@@ -11,8 +12,8 @@ SET WRAPPER_PROPERTIES=%WRAPPER_DIR%\maven-wrapper.properties
 
 IF NOT EXIST "%WRAPPER_JAR%" (
   FOR /F "tokens=1,2 delims==" %%A IN ('findstr "wrapperUrl" "%WRAPPER_PROPERTIES%"') DO SET WRAPPER_URL=%%B
-  echo Baixando Maven Wrapper de: %WRAPPER_URL%
-  powershell -Command "Invoke-WebRequest -Uri '%WRAPPER_URL%' -OutFile '%WRAPPER_JAR%'"
+  echo Baixando Maven Wrapper de: !WRAPPER_URL!
+  powershell -Command "Invoke-WebRequest -Uri '!WRAPPER_URL!' -OutFile '%WRAPPER_JAR%'"
 )
 
 IF NOT "%JAVA_HOME%"=="" (

@@ -4,6 +4,7 @@ import com.jeffry.agendamento.dto.AgendamentoDtos.*;
 import com.jeffry.agendamento.model.Usuario;
 import com.jeffry.agendamento.service.AgendamentoService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,9 @@ public class AgendamentoController {
     }
 
     // usado pelo painel admin para ver a agenda do dia/periodo
+    // restrito a ADMIN: sem essa checagem, qualquer cliente autenticado
+    // conseguiria listar os agendamentos e nomes de outros clientes
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<AgendamentoResponse> listarPorPeriodo(@RequestParam LocalDateTime inicio,
                                                         @RequestParam LocalDateTime fim) {
