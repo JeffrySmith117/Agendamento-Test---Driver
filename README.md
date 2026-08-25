@@ -1,4 +1,4 @@
-﻿# Sistema de Agendamento - Test-Drive & Revisao
+# Sistema de Agendamento - Test-Drive & Revisao
 
 [![CI](https://github.com/JeffrySmith117/Agendamento-Test---Driver/actions/workflows/ci.yml/badge.svg)](https://github.com/JeffrySmith117/Agendamento-Test---Driver/actions/workflows/ci.yml)
 
@@ -43,6 +43,17 @@ cobrindo front-end, back-end, banco de dados, autenticacao e um diferencial de I
   plugar um modelo de recomendacao/LLM no futuro - ex. via API Claude)
 - Painel administrativo com a agenda do dia
 
+
+## Seguranca
+
+- Autenticacao stateless via JWT, com senhas hasheadas (BCrypt)
+- Controle de acesso por role (RBAC): endpoints administrativos exigem
+  role ADMIN, verificado via @PreAuthorize no nivel de metodo
+- Durante uma revisao de seguranca, foi identificada e corrigida uma falha
+  de controle de acesso (OWASP Top 10 - A01:2021) no endpoint de listagem
+  de agendamentos por periodo, que nao restringia o acesso apenas a
+  administradores
+- CORS restrito a origens explicitamente permitidas via variavel de ambiente
 ## Metodologia - organizado em sprints
 
 | Sprint | Entrega |
