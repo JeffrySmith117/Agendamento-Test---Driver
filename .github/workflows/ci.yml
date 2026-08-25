@@ -1,5 +1,7 @@
 ﻿name: CI
 
+# roda a cada push ou pull request para a main, testando backend e frontend
+# separadamente para dar feedback rapido sobre qual lado quebrou
 on:
   push:
     branches: [main]
@@ -25,6 +27,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
           cache-dependency-path: backend/pom.xml
+
+      - name: Dar permissao de execucao ao mvnw
+        run: chmod +x ./mvnw
 
       - name: Build e testes (mvn verify)
         run: ./mvnw -B clean verify
