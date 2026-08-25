@@ -1,4 +1,4 @@
-﻿package com.jeffry.agendamento.service;
+package com.jeffry.agendamento.service;
 
 import com.jeffry.agendamento.dto.AgendamentoDtos.*;
 import com.jeffry.agendamento.model.Agendamento;
