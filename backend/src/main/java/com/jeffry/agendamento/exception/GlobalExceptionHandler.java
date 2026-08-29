@@ -3,6 +3,7 @@ package com.jeffry.agendamento.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,6 +14,16 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    // AuthorizationDeniedException (lancada pelo @PreAuthorize desde o Spring
+    // Security 6.3) estende AccessDeniedException, mas o interceptor de
+    // seguranca de metodo a lanca dentro do proprio despacho do controller,
+    // entao precisa de handler explicito aqui para nao cair no handler
+    // generico de Exception (que responderia 500 em vez de 403).
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<Object> handleAuthorizationDenied(AuthorizationDeniedException ex) {
+        return build(HttpStatus.FORBIDDEN, "Acesso negado: voce nao tem permissao para este recurso.");
+    }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDenied(AccessDeniedException ex) {
